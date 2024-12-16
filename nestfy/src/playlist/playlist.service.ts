@@ -40,9 +40,12 @@ export class PlaylistService {
     }
   }
 
-  async findAll() {
+  async findAllByUser(userId: number) {
     try {
-      return await this.playlistRepository.find({ relations: ['user', 'songs'] });
+      return await this.playlistRepository.find({
+        relations: ['user', 'songs'],
+        where: { user: { id: userId } },
+      });
     } catch (error) {
       throw new InternalServerErrorException('Failed to retrieve playlists');
     }

@@ -4,7 +4,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
-@ApiTags('users')
+@ApiTags('Users')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -18,7 +18,6 @@ export class UserController {
   }
 
   @Get()
-  
   @ApiOperation({ summary: 'Obtém detalhes de todos os usuários' })
   @ApiResponse({ status: 200, description: 'Detalhes dos usuários retornados.' })
   findAll() {

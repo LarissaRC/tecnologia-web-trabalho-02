@@ -18,7 +18,7 @@ function Artists() {
     <div>
       <h1>Artistas</h1>
       {artists.map((artist) => (
-        <Collapsible key={artist.id} title={artist.name}>
+        <Collapsible key={artist.id} title={`#${artist.id}  ${artist.name}`}>
           <ArtistDetails artistId={artist.id} />
         </Collapsible>
       ))}

@@ -17,7 +17,6 @@ export class SubscriptionService {
   
   async create(userId: number, type: string): Promise<FindActiveSubscriptionDto> {
     try {
-      // Verify if there's an active subscription and end it
       const activeSubscription = await this.subscriptionRepository.findOne({
         where: { user: { id: userId }, end_date: null },
       });
@@ -27,7 +26,6 @@ export class SubscriptionService {
         await this.subscriptionRepository.save(activeSubscription);
       }
 
-      // Create a new subscription
       const newSubscription = this.subscriptionRepository.create({
         user: { id: userId },
         type,

@@ -6,6 +6,7 @@ import { Album } from './entities/album.entity';
 import { Artist } from 'src/artist/entities/artist.entity';
 import { Genre } from 'src/genre/entities/genre.entity';
 import { Repository } from 'typeorm';
+import { LikedSong } from 'src/liked-song/entities/liked-song.entity';
 
 @Injectable()
 export class AlbumService {
@@ -16,8 +17,10 @@ export class AlbumService {
     private readonly artistRepository: Repository<Artist>,
     @InjectRepository(Genre)
     private readonly genreRepository: Repository<Genre>,
-  ) {}
-  
+    @InjectRepository(LikedSong)
+    private readonly likedSongRepository: Repository<LikedSong>,
+  ) { }
+
   async create(createAlbumDto: CreateAlbumDto) {
     try {
       const { title, artistId, release_date, genreIds } = createAlbumDto;
@@ -45,10 +48,11 @@ export class AlbumService {
     }
   }
 
-  async findAll() {
+  async findAllByArtist(artistId: number) {
     try {
       return await this.albumRepository.find({
         relations: ['artist', 'genres', 'songs'],
+        where: { artist: { id: artistId } },
       });
     } catch (error) {
       throw new InternalServerErrorException('Failed to retrieve albums');
@@ -64,7 +68,23 @@ export class AlbumService {
       if (!album) {
         throw new NotFoundException(`Album with ID ${id} not found`);
       }
-      return album;
+
+      const songsWithLikes = await Promise.all(
+        album.songs.map(async (song) => {
+          const likeCount = await this.likedSongRepository.count({
+            where: { song: { id: song.id } },
+          });
+          return {
+            ...song,
+            likeCount,
+          };
+        })
+      );
+
+      return {
+        ...album,
+        songs: songsWithLikes,
+      };
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;

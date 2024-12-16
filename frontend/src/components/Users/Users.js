@@ -18,7 +18,7 @@ function Users() {
     <div>
       <h1>Usuários</h1>
       {users.map((user) => (
-        <Collapsible key={user.id} title={user.name}>
+        <Collapsible key={user.id} title={`#${user.id}  ${user.name}`}>
           <UserDetails userId={user.id} />
         </Collapsible>
       ))}

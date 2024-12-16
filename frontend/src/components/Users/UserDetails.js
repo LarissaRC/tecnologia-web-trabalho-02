@@ -20,8 +20,8 @@ function UserDetails({ userId }) {
 
   return (
     <div>
-      <p>Nome: {user.name}</p>
-      <p>Email: {user.email}</p>
+      <p><strong>Nome:</strong> {user.name}</p>
+      <p><strong>Email:</strong> {user.email}</p>
 
       <Collapsible title="Assinaturas">
         <Subscriptions userId={userId} />
